@@ -4,48 +4,48 @@ void mouseReleased() {
     updateButton.clicked = false;
     triggerShotButton.clicked = false;
     exportCSVButton.clicked = false;
-    play.clicked = false;
-    pause.clicked = false;
-    help.clicked = false;
+    playButton.clicked = false;
+    pauseButton.clicked = false;
+    helpButton.clicked = false;
 }
 
 // Função chamada quando uma tecla é pressionada
 void keyPressed() {
     if (activeTab == 0) {
         // Passa o evento de teclado para as caixas de texto na aba de configurações
-        for (TextBox input : configInputs) {
-            input.handleKeyPress(key);
-        }
+      for (TextBox input : configInputs) {
+        input.handleKeyPress(key);
+      }
     } else if (activeTab > 0) {
-        if (key == ' ') {
-            // Se estiver no modo de captura, ativa a captura de dados
-            if (shotModeActive) {
-                triggerCaptureShot();
-            } else {
-                // Pausa ou retoma a plotagem dos dados
-                pausePlot = !pausePlot;
-            }
+      if (key == ' ') {
+        // Se estiver no modo de captura, ativa a captura de dados
+        if (shotModeActive) {
+          triggerCaptureShot();
+        } else {
+          // Pausa ou retoma a plotagem dos dados
+          pausePlot = !pausePlot;
         }
+      }
     }
     
     // Ajusta o fator de escala manualmente com as teclas de seta
     if (scaleMode == 2) {
-        if (keyCode == LEFT) {  // Aumenta o fator de escala (reduz o zoom)
-            manualScaleFactor += 20;
-            println("manualScaleFactor: " + manualScaleFactor);
-        } else if (keyCode == RIGHT) {  // Diminui o fator de escala (aumenta o zoom)
-            manualScaleFactor -= 20;
-            if (manualScaleFactor < 100) manualScaleFactor = 100;  // Evita valores muito baixos
-            println("manualScaleFactor: " + manualScaleFactor);
-        } else if (keyCode == UP) {  // Aumenta o deslocamento DC
-            manualDCOffset += 4;
-            if (manualDCOffset > 2048) manualDCOffset = 2048;  // Evita valores muito altos
-            println("manualDCOffset: " + manualDCOffset);
-        } else if (keyCode == DOWN) {  // Diminui o deslocamento DC
-            manualDCOffset -= 4;
-            if (manualDCOffset < -2048) manualDCOffset = -2048;  // Evita valores muito baixos
-            println("manualDCOffset: " + manualDCOffset);
-        }
+      if (keyCode == LEFT) {  // Aumenta o fator de escala (reduz o zoom)
+        manualScaleFactor += 20;
+        println("manualScaleFactor: " + manualScaleFactor);
+      } else if (keyCode == RIGHT) {  // Diminui o fator de escala (aumenta o zoom)
+        manualScaleFactor -= 20;
+        if (manualScaleFactor < 100) manualScaleFactor = 100;  // Evita valores muito baixos
+        println("manualScaleFactor: " + manualScaleFactor);
+      } else if (keyCode == UP) {  // Aumenta o deslocamento DC
+        manualDCOffset += 4;
+        if (manualDCOffset > 2048) manualDCOffset = 2048;  // Evita valores muito altos
+        println("manualDCOffset: " + manualDCOffset);
+      } else if (keyCode == DOWN) {  // Diminui o deslocamento DC
+        manualDCOffset -= 4;
+        if (manualDCOffset < -2048) manualDCOffset = -2048;  // Evita valores muito baixos
+        println("manualDCOffset: " + manualDCOffset);
+      }
     }
 }
 
@@ -68,76 +68,81 @@ void mousePressed() {
 
     // Passa o evento de clique para as caixas de texto na aba de configurações
     if (activeTab == 0) {
+      
         // Verifica se o clique ocorreu nos checkboxes de modo
         if (checkboxContinuousMode.isMouseOver(mouseX, mouseY)) {
-            checkboxContinuousMode.setSelected(true);
-            checkboxShotMode.setSelected(false);
-            shotModeActive = false;
-            shotCaptured = false;  // Ao voltar para continuous, descarta os dados congelados
-            indicatorCSV = 0;
+          checkboxContinuousMode.setSelected(true);
+          checkboxShotMode.setSelected(false);
+          shotModeActive = false;
+          shotCaptured = false;  // Ao voltar para continuous, descarta os dados congelados
+          indicatorCSV = 0;
         } else if (checkboxShotMode.isMouseOver(mouseX, mouseY)) {
-            checkboxShotMode.setSelected(true);
-            checkboxContinuousMode.setSelected(false);
-            shotModeActive = true;
-            indicatorCSV = 1;
+          checkboxShotMode.setSelected(true);
+          checkboxContinuousMode.setSelected(false);
+          shotModeActive = true;
+          indicatorCSV = 1;
+          checkboxNoScale.setSelected(true);
+          checkboxAutoScale.setSelected(false);
+          checkboxManualScale.setSelected(false);
+          scaleMode = 0;
         }
         
         // Verifica se o botão de trigger foi clicado
         if (triggerShotButton.isClicked(mouseX, mouseY) && shotModeActive) {
-            // Se o botão for acionado, ativa o shot_mode e captura os dados
-            triggerShotButton.clicked = true;
-            shotSampleCounter = 0;
-            indicatorCSV = 1;
-            shotTrigger = true;
-            println("Shot mode: dados congelados!");
+          // Se o botão for acionado, ativa o shot_mode e captura os dados
+          triggerShotButton.clicked = true;
+          shotSampleCounter = 0;
+          indicatorCSV = 1;
+          shotTrigger = true;
+          println("Shot mode: dados congelados!");
         } else if (exportCSVButton.isClicked(mouseX, mouseY) && shotModeActive && shotCSV) {
-            exportShotDataToCSV();
-            exportCSVButton.clicked = true;
-            println("CSV Exportado");
+          exportShotDataToCSV();
+          exportCSVButton.clicked = true;
+          println("CSV Exportado");
         }
         
         // Verifica se o clique ocorreu nos checkboxes de IP
         if (checkboxMachine.isMouseOver(mouseX, mouseY)) {
-            checkboxMachine.setSelected(true);
-            checkboxUser.setSelected(false);
+          checkboxMachine.setSelected(true);
+          checkboxUser.setSelected(false);
         } else if (checkboxUser.isMouseOver(mouseX, mouseY)) {
-            checkboxMachine.setSelected(false);
-            checkboxUser.setSelected(true);
+          checkboxMachine.setSelected(false);
+          checkboxUser.setSelected(true);
         }
         
         // Verifica se o clique ocorreu nos checkboxes de escala
         if (checkboxNoScale.isMouseOver(mouseX, mouseY)) {
-            checkboxNoScale.setSelected(true);
-            checkboxAutoScale.setSelected(false);
-            checkboxManualScale.setSelected(false);
-            scaleMode = 0;
+          checkboxNoScale.setSelected(true);
+          checkboxAutoScale.setSelected(false);
+          checkboxManualScale.setSelected(false);
+          scaleMode = 0;
         } else if (checkboxAutoScale.isMouseOver(mouseX, mouseY)) {
-            checkboxNoScale.setSelected(false);
-            checkboxAutoScale.setSelected(true);
-            checkboxManualScale.setSelected(false);
-            scaleMode = 1;
+          checkboxNoScale.setSelected(false);
+          checkboxAutoScale.setSelected(true);
+          checkboxManualScale.setSelected(false);
+          scaleMode = 1;
         } else if (checkboxManualScale.isMouseOver(mouseX, mouseY)) {
-            checkboxNoScale.setSelected(false);
-            checkboxAutoScale.setSelected(false);
-            checkboxManualScale.setSelected(true);
-            scaleMode = 2;
+          checkboxNoScale.setSelected(false);
+          checkboxAutoScale.setSelected(false);
+          checkboxManualScale.setSelected(true);
+          scaleMode = 2;
         }
-        
-        // Verifica se o botão de play foi clicado
+
+        // Verifica se o botão de play foi clicado     
         if (playButton.isClicked(mouseX, mouseY)) {
-            playButton.clicked = true;
-            pausePlot = false;
+          playButton.clicked = true;
+          pausePlot = false;
         } else if (pauseButton.isClicked(mouseX, mouseY)) {
-            pauseButton.clicked = true;
-            pausePlot = true;  
+          pauseButton.clicked = true;
+          pausePlot = true;  
         }
         
         // Verifica se o botão de ajuda foi clicado
         if (helpButton.isClicked(mouseX, mouseY)) {
-            helpButton.clicked = true;
-            String[] args = {"Ajuda"};
-            PApplet.runSketch(args, helpWindow);
-            helpWindow = new HelpWindow();
+          helpButton.clicked = true;
+          String[] args = {"Ajuda"};
+          PApplet.runSketch(args, helpWindow);
+          helpWindow = new HelpWindow();
         }
         
         // Passa o evento de clique para as caixas de texto

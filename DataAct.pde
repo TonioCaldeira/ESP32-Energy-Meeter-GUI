@@ -22,19 +22,21 @@ void receive(byte[] data, String senderIP, int senderPort) {
 
 // Processa pacotes de dados com tamanho 1000
 void processDataPacket(byte[] data) {
+    //calibChannel = new short[numChannels]; // Inicializa o array com o tamanho adequado
+    //println("Packet received, length: " + data.length);
     ByteBuffer buffer = ByteBuffer.wrap(data, 0, data.length - 2);
     buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-    packetCount = buffer.getInt();               // Contador de pacotes
-    errorFlag = buffer.getShort();               // Flag de erro
-    activeChannels = buffer.getShort();          // Número de canais ativos
-    int sampleRate_x = buffer.getInt();          // Taxa de amostragem
-    UDPRateReal = buffer.getFloat();             // Taxa UDP real
-    calibCoeffAtten = buffer.getShort();         // Coeficiente de calibração de atenuação
-    calibCoeffDCOffset = buffer.getShort();      // Coeficiente de calibração de offset DC
-    samplesPerPacketChannel = buffer.getShort(); // Amostras por pacote por canal
-    calibCoeffADC_A = buffer.getShort();         // Coeficiente de calibração ADC A
-    calibCoeffADC_B = buffer.getShort();         // Coeficiente de calibração ADC B
+    packetCount = buffer.getInt();               //
+    errorFlag = buffer.getShort();               //
+    activeChannels = buffer.getShort();          //
+    int sampleRate_x = buffer.getInt();          //
+    UDPRateReal = buffer.getFloat();             //
+    calibCoeffAtten = buffer.getShort();         //
+    calibCoeffDCOffset = buffer.getShort();      //
+    samplesPerPacketChannel = buffer.getShort(); //
+    calibCoeffADC_A = buffer.getShort();         //
+    calibCoeffADC_B = buffer.getShort();
     
     float alpha = 0.03;
     UDPRateAverage = UDPRateAverage * (1 - alpha) + UDPRateReal * alpha;    
@@ -58,17 +60,21 @@ void processDataPacket(byte[] data) {
       channelData = new short[numChannels][displaySamples];
     }
     
-    // Copia os dados do buffer para o array de dados do canal
+    //println("Packet count: " + packetCount + ", Active channels: " + activeChannels + ", Samples per channel: " + samplesPerPacketChannel + ", UDP_rate [Hz]: " + UDPRateReal + ", DC_offset: " + calibCoeffDCOffset);
+    //println(samplesPerPacketChannel + " " + calibCoeffADC_A + " " + calibCoeffADC_B);
     for (int ch = 0; ch < activeChannels; ch++) {
       int numToCopy = displaySamples - samplesPerPacketChannel;
+      // Realiza o arraycopy somente se houver elementos para copiar
       if (numToCopy > 0) {
           System.arraycopy(channelData[ch], samplesPerPacketChannel, channelData[ch], 0, numToCopy);
       }
   
+      // Preenche os índices restantes com novos dados do buffer
       for (int i = numToCopy; i < displaySamples; i++) {
           if (buffer.hasRemaining()) {
               channelData[ch][i] = (short)(buffer.getShort() - calibCoeffDCOffset + calibChannel[ch]);
           } else {
+              // Se não houver dados no buffer, utiliza o valor anterior (cuidando para o caso i==0)
               channelData[ch][i] = (i > 0 ? channelData[ch][i - 1] : 0);
           }
       }

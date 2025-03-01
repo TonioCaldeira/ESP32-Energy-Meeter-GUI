@@ -124,7 +124,7 @@ class TextBox {
     }
 
     TextBox(int x, int y, String label, String defaultValue) {
-        this.x = x + 150;
+        this.x = x+150;
         this.y = y;
         this.w = 180;
         this.h = 40;
@@ -185,13 +185,13 @@ class Checkbox {
         // Desenha o rótulo ao lado
         fill(255);
         textAlign(LEFT, CENTER);
-        text(label, x + size + 10, y + size / 2);
+        text(label, x + size + 10, y + size/2);
         
         // Opcional: desenha um "check" se estiver selecionada
         if (selected) {
             stroke(255);
-            line(x + 3, y + size / 2, x + size / 2, y + size - 3);
-            line(x + size / 2, y + size - 3, x + size - 3, y + 3);
+            line(x + 3, y + size/2, x + size/2, y + size - 3);
+            line(x + size/2, y + size - 3, x + size - 3, y + 3);
         }
     }
     
@@ -207,43 +207,42 @@ class Checkbox {
 
 // Classe que implementa a janela de ajuda
 public class HelpWindow extends PApplet {
-    public void settings() {
-        size(1000, 500);
-    }
+  public void settings() {
+    size(1000, 500);
+  }
   
-    public void setup() {
-        background(255);
-        textAlign(LEFT, CENTER);
-        fill(0);
-    }
+  public void setup() {
+    background(255);
+    textAlign(LEFT, CENTER);
+    fill(0);
+  }
   
-    public void draw() {
-        background(255);
-        textSize(20);
-        text("Instruções de Uso:\n\n" +
-             "1° - Configure os parâmetros na aba 'Settings' e confirme com 'Update Parameters'.\n" +
-             "2° - Escolha entre 'Local IP' e 'Custom IP' selecionando uma das caixas.\n" +
-             "3° - Selecione um dispositivo disponível e confirme com 'Confirm'.\n" +
-             "4° - Use as caixas para alternar entre o modo Contínuo (Continuous Mode) e o modo de Disparo (Shot Mode).\n" +
-             "5° - Use a aba superior para navegar entre janelas.\n\n" +
-             
-             "Dentro do modo Contínuo:\n" + 
-             "    Use a barra de espaço (SPACEBAR) para Pausar.\n" +
-             "    Use as caixas para alternar entre escala Desativada, Automática e Manual.\n" +
-             "    Use as setas direcionais (UP, DOWN, LEFT, RIGHT) para ajustar a escala manualmente em (Manual Scale).\n\n" +
-             
-             "Dentro do modo de Disparo:\n" + 
-             "    Para adquirir dados pressione 'Trigger Shot'.\n" + 
-             "    Para exportar dados pressione 'Export CSV'.\n\n" +
-             
-             "Pressione ESC para fechar esta janela.", 50, height / 2);
+  public void draw() {
+    background(255);
+    textSize(20);
+    text("Instruções de Uso:\n\n" +
+         "1° - Configure os parâmetros na aba 'Settings' e confirme com 'Update Parameters'.\n" +
+         "2° - Escolha entre 'Local IP' e 'Custom IP' selecionando uma das caixas.\n" +
+         "3° - Selecione um dispositivo disponivel e confirme com 'Confirm'.\n" +
+         "4° - Use as caixas para alternar entre o modo Contínuo (Continuous Mode) e o modo de Disparo (Shot Mode).\n" +
+         "5° - Use a aba superiora para navegar entre janelas.\n\n" +
+         
+         "Dentro do modo Contínuo:\n" + 
+         "    Use a barra de espaço (SPACEBAR) para Pausar.\n" +
+         "    Use as caixas para alternar entre escala Desativada, Automática e Manual.\n" +
+         "    Use as setas direcionais (UP, DOWN, LEFT, RIGHT) para ajustar a escala manualmente em (Manual Scale).\n\n" +
+         
+         "Dentro do modo de Disparo:\n" + 
+         "    Para aquisitar dados pressione 'Trigger Shot'.\n" + 
+         "    Para exportar dados pressione 'Export CSV'.\n\n" +
+         
+         "Pressione ESC para fechar esta janela.", 50, height/2);
+  }
+  public void keyPressed() {
+    if (key == ESC) {
+      // Em vez de chamar exit(), que fecha o sketch inteiro, apenas feche o popup:
+      surface.setVisible(false);
+      key = 0;
     }
-
-    public void keyPressed() {
-        if (key == ESC) {
-            // Em vez de chamar exit(), que fecha o sketch inteiro, apenas feche o popup:
-            surface.setVisible(false);
-            key = 0;
-        }
-    }
+  }
 }
