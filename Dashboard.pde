@@ -179,9 +179,9 @@ float[][] calculateDFT(short[] data, int[] freqs) {
       real += data[n] * cos(angle);
       imag -= data[n] * sin(angle);
     }
-    float mag = sqrt(real * real + imag * imag) / N; // Isso retorna A/2 para uma senóide pura
-    results[f][0] = mag * scaleFactor;              // Magnitude - Agora resulta em A/sqrt(2) (valor RMS)
-    results[f][1] = atan2(imag, real);               // Fase
+    float mag = sqrt(real * real + imag * imag) / N;  // Isso retorna A/2 para uma senóide pura
+    results[f][0] = mag * scaleFactor;                // Magnitude - Agora resulta em A/sqrt(2) (valor RMS)
+    results[f][1] = atan2(imag, real);                // Fase
   }
   return results;
 }
@@ -192,7 +192,7 @@ void drawPhasorDiagram(int startX, int startY, int sectionWidth, int sectionHeig
   int centerY = startY + sectionHeight / 2;
   float scaleFactor = sectionHeight / 5;
   float ref = 0;
-  float absoluteThreshold = 3; // Valor absoluto para ignorar magnitudes < 3%
+  float absoluteThreshold = 15; // Valor absoluto para ignorar magnitudes < 1,5%
     
   fill(0);
   fill(255);
@@ -392,7 +392,7 @@ void drawElectricalParameters(int startX, int startY, int channelA, int channelB
   float Irms = sqrt(sumCurrentSq / samples) * currentConv;
   
   // Cálculo das potências
-  float activePower   = Vrms * Irms * cos(deltaPhase); // em Watts (W)
+  float activePower   = Vrms * Irms * cos(deltaPhase);   // em Watts (W)
   float apparentPower = Vrms * Irms;                     // em Volt-Amperes (VA)
   float reactivePower = Vrms * Irms * sin(deltaPhase);   // em Volt-Ampere Reativos (VAR)
   
